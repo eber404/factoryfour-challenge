@@ -1,26 +1,23 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import './App.css'
+
+import { StatusCard } from './components/StatusCard'
+import { useHealthStatus } from './contexts/HealthStatusContext'
 
 function App() {
+  const { statuses, isLoading } = useHealthStatus()
+
+  const shouldRender = statuses.length > 0 && !isLoading
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+      {shouldRender &&
+        statuses.map((status) => (
+          <div className="status-card-container" key={status.hostname}>
+            <StatusCard status={status} />
+          </div>
+        ))}
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
