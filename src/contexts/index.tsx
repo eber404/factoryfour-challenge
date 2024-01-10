@@ -5,8 +5,13 @@ import { FactoryFourHealthStatusService } from '@/core/services/impl/factoryfour
 
 import { HealthStatusProvider } from './HealthStatusContext'
 
+const baseURL =
+  process.env.NODE_ENV === 'development'
+    ? 'https://thingproxy.freeboard.io/fetch/https://api.factoryfour.com'
+    : 'https://api.factoryfour.com'
+
 const httpClient = axios.create({
-  baseURL: 'https://thingproxy.freeboard.io/fetch/https://api.factoryfour.com',
+  baseURL,
   withCredentials: false,
 })
 
