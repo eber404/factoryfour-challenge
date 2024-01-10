@@ -13,7 +13,8 @@ function App() {
 
   useEffect(() => {
     void loadStatuses()
-    startPolling(loadStatuses, DEFAULT_POLLING_INTERVAL_MS)
+    const polling = startPolling(loadStatuses, DEFAULT_POLLING_INTERVAL_MS)
+    return () => clearInterval(polling)
   }, [loadStatuses])
 
   const shouldRender = statuses.length > 0

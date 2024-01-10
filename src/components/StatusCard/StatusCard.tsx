@@ -28,7 +28,9 @@ export function StatusCard({ status }: Props) {
       </div>
       <div className={styles.info}>
         <p className={styles.description}>{status.message}</p>
-        <pre>{status.hostname || status.statusText}</pre>
+        <pre>
+          {status.hostname || `${status.statusCode} - ${status.statusText}`}
+        </pre>
         <span className={styles.time}>{status.time}</span>
       </div>
     </div>

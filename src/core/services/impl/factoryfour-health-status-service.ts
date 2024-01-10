@@ -24,14 +24,14 @@ export class FactoryFourHealthStatusService implements StatusService {
         statusText: res.statusText,
       })
     } catch (error: any) {
+      console.log(error)
       return new HealthStatus({
         resource: hostname,
-        hostname,
         message: 'OUTAGE',
         isHealthy: false,
         time: new Date(),
-        statusCode: 403,
-        statusText: 'Forbidden',
+        statusCode: error.response?.status,
+        statusText: error.response?.statusText,
       })
     }
   }
