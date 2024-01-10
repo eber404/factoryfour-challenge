@@ -1,35 +1,38 @@
 import { AxiosInstance } from 'axios'
 
 import {
-  StatusOutput,
+  HealthStatusDTO,
   StatusService,
 } from '@/core/services/health-status-service'
+import { HealthStatus } from '@/core/entities/health-status'
 
 export class FactoryFourHealthStatusService implements StatusService {
   constructor(private readonly client: AxiosInstance) {}
 
-  async checkStatus(hostname: string): Promise<StatusOutput> {
+  async checkStatus(hostname: string): Promise<HealthStatus> {
     try {
-      const res = await this.client.get<StatusOutput>(
+      const res = await this.client.get<HealthStatusDTO>(
         `/${hostname}/health/status`
       )
 
-      return {
+      return new HealthStatus({
         ...res.data,
+        time: new Date(res.data.time),
+        isHealthy: res.data.success,
         resource: hostname,
         statusCode: res.status,
-        status: res.statusText,
-      }
+        statusText: res.statusText,
+      })
     } catch (error: any) {
-      return {
+      return new HealthStatus({
         resource: hostname,
         hostname,
         message: 'OUTAGE',
-        success: false,
-        time: Date.now(),
-        statusCode: error.request.status,
-        status: error.request.statusText,
-      }
+        isHealthy: false,
+        time: new Date(),
+        statusCode: 403,
+        statusText: 'Forbidden',
+      })
     }
   }
 }

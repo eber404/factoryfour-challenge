@@ -1,10 +1,20 @@
-import './App.css'
+import { useEffect } from 'react'
 
 import { StatusCard } from '@/components/StatusCard'
 import { useHealthStatus } from '@/contexts/HealthStatusContext'
+import { startPolling } from '@/utils/polling'
+
+import './App.css'
+
+const DEFAULT_POLLING_INTERVAL_MS = 15_000
 
 function App() {
-  const { statuses } = useHealthStatus()
+  const { statuses, loadStatuses } = useHealthStatus()
+
+  useEffect(() => {
+    void loadStatuses()
+    startPolling(loadStatuses, DEFAULT_POLLING_INTERVAL_MS)
+  }, [loadStatuses])
 
   const shouldRender = statuses.length > 0
 

@@ -4,34 +4,32 @@ import styles from './StatusCard.module.css'
 
 interface Props {
   status: {
-    success: boolean
+    resource: string
+    isHealthy: boolean
     message: string
-    hostname: string
-    time: number
+    time: string
+    hostname?: string
+    statusCode?: number
+    statusText?: string
   }
 }
 
 export function StatusCard({ status }: Props) {
-  const description = status.message.split(' ')[0]
-  const title = status.hostname.split('-')[0]
-
   return (
     <div className={cn(styles.container)}>
       <div className={cn(styles['header'])}>
-        <p className={styles.title}>{title}</p>
+        <p className={styles.title}>{status.resource}</p>
         <div
           className={cn(styles['status-dot'], {
-            [styles['status-dot--online']]: status.success,
-            [styles['status-dot--offline']]: !status.success,
+            [styles['status-dot--online']]: status.isHealthy,
+            [styles['status-dot--offline']]: !status.isHealthy,
           })}
         />
       </div>
       <div className={styles.info}>
-        <p className={styles.description}>{description}</p>
-        <pre>{status.hostname}</pre>
-        <span className={styles.time}>
-          {new Date(status.time).toLocaleTimeString()}
-        </span>
+        <p className={styles.description}>{status.message}</p>
+        <pre>{status.hostname || status.statusText}</pre>
+        <span className={styles.time}>{status.time}</span>
       </div>
     </div>
   )

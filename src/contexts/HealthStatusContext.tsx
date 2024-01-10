@@ -3,13 +3,19 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useState,
 } from 'react'
-import {
-  StatusOutput as Status,
-  StatusService,
-} from '@/core/services/health-status-service'
+import { StatusService } from '@/core/services/health-status-service'
+import { HealthStatus } from '@/core/entities/health-status'
+
+type HealthStatusContext = {
+  statuses: HealthStatus[]
+  loadStatuses: () => void
+}
+
+type HealthStatusProps = PropsWithChildren<{
+  healthStatusService: StatusService
+}>
 
 const resources = [
   'accounts',
@@ -32,46 +38,22 @@ const resources = [
   'workflows',
 ]
 
-type ApiStatusContext = {
-  statuses: Status[]
-}
-
-type ApiStatusProps = PropsWithChildren<{
-  healthStatusService: StatusService
-}>
-
-const Context = createContext({} as ApiStatusContext)
-
-const DEFAULT_POLLING_INTERVAL_MS = 15000
-
-const startPolling = (callback: () => void | Promise<void>, interval: number) =>
-  setInterval(callback, interval)
+const Context = createContext({} as HealthStatusContext)
 
 export function HealthStatusProvider({
   children,
   healthStatusService,
-}: ApiStatusProps) {
-  const [statuses, setStatuses] = useState([] as Status[])
-
-  const updateStatuses = useCallback(
-    (oldStatuses: Status[], newStatuses: Status[]) =>
-      oldStatuses.map(
-        (oldStatus) =>
-          newStatuses.find(
-            (newStatus) => newStatus.resource === oldStatus.resource
-          ) || oldStatus
-      ),
-    []
-  )
+}: HealthStatusProps) {
+  const [statuses, setStatuses] = useState([] as HealthStatus[])
 
   const fetchStatuses = useCallback(async () => {
     const promises = resources.map(
       (resource) => () => healthStatusService.checkStatus(resource)
     )
-    const newStatuses = await Promise.all(
+    const statuses = await Promise.all(
       promises.map(async (promise) => await promise())
     )
-    return newStatuses
+    return statuses
   }, [healthStatusService])
 
   const loadStatuses = useCallback(async () => {
@@ -79,12 +61,11 @@ export function HealthStatusProvider({
     setStatuses(statuses)
   }, [fetchStatuses])
 
-  useEffect(() => {
-    void loadStatuses()
-    startPolling(loadStatuses, DEFAULT_POLLING_INTERVAL_MS)
-  }, [fetchStatuses, loadStatuses, updateStatuses])
-
-  return <Context.Provider value={{ statuses }}>{children}</Context.Provider>
+  return (
+    <Context.Provider value={{ statuses, loadStatuses }}>
+      {children}
+    </Context.Provider>
+  )
 }
 
 export const useHealthStatus = () => useContext(Context)

@@ -1,13 +1,12 @@
-export type StatusOutput = {
-  resource: string
+import { HealthStatus } from '@/core/entities/health-status'
+
+export type HealthStatusDTO = {
   success: boolean
   message: string
   hostname: string
   time: number
-  statusCode?: number
-  status?: string
 }
 
 export interface StatusService {
-  checkStatus(hostname: string): Promise<StatusOutput>
+  checkStatus(hostname: string): Promise<HealthStatus>
 }
