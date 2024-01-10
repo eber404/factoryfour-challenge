@@ -24,7 +24,6 @@ export class FactoryFourHealthStatusService implements StatusService {
         statusText: res.statusText,
       })
     } catch (error: any) {
-      console.log(error)
       return new HealthStatus({
         resource: hostname,
         message: 'OUTAGE',
