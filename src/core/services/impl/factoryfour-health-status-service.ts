@@ -1,16 +1,12 @@
-import axios, { AxiosInstance } from 'axios'
+import { AxiosInstance } from 'axios'
 
-import { StatusOutput, StatusService } from '../health-status-service'
+import {
+  StatusOutput,
+  StatusService,
+} from '@/core/services/health-status-service'
 
 export class FactoryFourHealthStatusService implements StatusService {
-  private readonly client: AxiosInstance
-
-  constructor() {
-    this.client = axios.create({
-      baseURL: 'https://api.factoryfour.com',
-      withCredentials: false,
-    })
-  }
+  constructor(private readonly client: AxiosInstance) {}
 
   async checkStatus(hostname: string): Promise<StatusOutput> {
     try {

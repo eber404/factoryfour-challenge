@@ -1,12 +1,12 @@
 import './App.css'
 
-import { StatusCard } from './components/StatusCard'
-import { useHealthStatus } from './contexts/HealthStatusContext'
+import { StatusCard } from '@/components/StatusCard'
+import { useHealthStatus } from '@/contexts/HealthStatusContext'
 
 function App() {
-  const { statuses, isLoading } = useHealthStatus()
+  const { statuses } = useHealthStatus()
 
-  const shouldRender = statuses.length > 0 && !isLoading
+  const shouldRender = statuses.length > 0
 
   return (
     <div className="container">

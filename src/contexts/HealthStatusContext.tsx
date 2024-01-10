@@ -9,7 +9,7 @@ import {
 import {
   StatusOutput as Status,
   StatusService,
-} from '../services/health-status-service'
+} from '@/core/services/health-status-service'
 
 const resources = [
   'accounts',
@@ -34,7 +34,6 @@ const resources = [
 
 type ApiStatusContext = {
   statuses: Status[]
-  isLoading: boolean
 }
 
 type ApiStatusProps = PropsWithChildren<{
@@ -53,7 +52,6 @@ export function HealthStatusProvider({
   healthStatusService,
 }: ApiStatusProps) {
   const [statuses, setStatuses] = useState([] as Status[])
-  const [isLoading, setIsLoading] = useState(false)
 
   const updateStatuses = useCallback(
     (oldStatuses: Status[], newStatuses: Status[]) =>
@@ -67,14 +65,12 @@ export function HealthStatusProvider({
   )
 
   const fetchStatuses = useCallback(async () => {
-    setIsLoading(true)
     const promises = resources.map(
       (resource) => () => healthStatusService.checkStatus(resource)
     )
     const newStatuses = await Promise.all(
       promises.map(async (promise) => await promise())
     )
-    setIsLoading(false)
     return newStatuses
   }, [healthStatusService])
 
@@ -88,11 +84,7 @@ export function HealthStatusProvider({
     startPolling(loadStatuses, DEFAULT_POLLING_INTERVAL_MS)
   }, [fetchStatuses, loadStatuses, updateStatuses])
 
-  return (
-    <Context.Provider value={{ statuses, isLoading }}>
-      {children}
-    </Context.Provider>
-  )
+  return <Context.Provider value={{ statuses }}>{children}</Context.Provider>
 }
 
 export const useHealthStatus = () => useContext(Context)

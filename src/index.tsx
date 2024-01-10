@@ -1,10 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 
-import './index.css'
-import App from './App'
+import '@/styles/global.css'
+import App from '@/pages/App'
+import { Contexts } from '@/contexts'
+
 import reportWebVitals from './reportWebVitals'
-import { Contexts } from './contexts'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
