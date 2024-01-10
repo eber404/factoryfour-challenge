@@ -6,7 +6,7 @@ import { FactoryFourHealthStatusService } from '@/core/services/impl/factoryfour
 import { HealthStatusProvider } from './HealthStatusContext'
 
 const httpClient = axios.create({
-  baseURL: 'https://api.factoryfour.com',
+  baseURL: 'https://corsproxy.io/?https://api.factoryfour.com',
   withCredentials: false,
 })
 
