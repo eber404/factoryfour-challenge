@@ -38,3 +38,11 @@
   margin: 12px 0;
   padding: 0 12px;
 }
+
+.loader-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  height: calc(100vh - 250px);
+}
