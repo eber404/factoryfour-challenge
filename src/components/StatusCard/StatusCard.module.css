@@ -1,6 +1,7 @@
 .container {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 16px;
   width: 100%;
   max-width: 400px;
@@ -30,6 +31,10 @@
   font-size: 16px;
   font-weight: 600;
   text-transform: capitalize;
+}
+
+.error-description {
+  white-space: pre-line;
 }
 
 .time {

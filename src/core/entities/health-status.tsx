@@ -35,11 +35,21 @@ export class HealthStatus {
     this.message = this.handleMessage(message)
     this.hostname = hostname
     this.time = time.toLocaleTimeString()
-    this.statusCode = statusCode
-    this.statusText = statusText
+    this.statusCode = this.handleStatusCode(statusCode)
+    this.statusText = this.handleStatusText(statusText)
   }
 
   private handleMessage(message: string) {
     return message.split(':')[0].trim()
+  }
+
+  private handleStatusCode(statusCode?: number) {
+    if (statusCode === 503 || !statusCode) return 403
+    return statusCode
+  }
+
+  private handleStatusText(statusText?: string) {
+    if (!statusText || statusText.length === 0) return 'Forbidden'
+    return statusText
   }
 }
