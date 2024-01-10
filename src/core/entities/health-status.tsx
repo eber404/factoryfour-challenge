@@ -1,4 +1,5 @@
 type HealthStatusInput = {
+  id?: string
   resource: string
   isHealthy: boolean
   message: string
@@ -9,6 +10,7 @@ type HealthStatusInput = {
 }
 
 export class HealthStatus {
+  public readonly id: string
   public readonly resource: string
   public readonly isHealthy: boolean
   public readonly message: string
@@ -18,6 +20,7 @@ export class HealthStatus {
   public readonly statusText?: string
 
   constructor({
+    id,
     isHealthy,
     message,
     resource,
@@ -26,6 +29,7 @@ export class HealthStatus {
     statusCode,
     statusText,
   }: HealthStatusInput) {
+    this.id = id ?? window.crypto.randomUUID()
     this.resource = resource
     this.isHealthy = isHealthy
     this.message = this.handleMessage(message)
